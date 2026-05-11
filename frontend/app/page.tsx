@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { Film, Sparkles, Users, Brain, TrendingUp, Zap } from 'lucide-react'
 
 const features = [
@@ -52,11 +53,11 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-bg-base via-purple-900/10 to-bg-base" />
+      <div className="absolute inset-0 bg-gradient-to-br from-bg-base via-purple-900/10 to-bg-base pointer-events-none" />
       
       {/* Floating orbs */}
       <motion.div
-        className="absolute top-20 left-20 w-72 h-72 bg-accent-primary/20 rounded-full blur-3xl"
+        className="absolute top-20 left-20 w-72 h-72 bg-accent-primary/20 rounded-full blur-3xl pointer-events-none"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.3, 0.5, 0.3],
@@ -68,7 +69,7 @@ export default function Home() {
         }}
       />
       <motion.div
-        className="absolute bottom-20 right-20 w-96 h-96 bg-accent-violet/20 rounded-full blur-3xl"
+        className="absolute bottom-20 right-20 w-96 h-96 bg-accent-violet/20 rounded-full blur-3xl pointer-events-none"
         animate={{
           scale: [1.2, 1, 1.2],
           opacity: [0.5, 0.3, 0.5],
@@ -99,7 +100,7 @@ export default function Home() {
                 CINEIQ
               </h1>
               <motion.div
-                className="absolute -inset-4 bg-gradient-to-r from-accent-primary/20 to-accent-violet/20 blur-2xl -z-10"
+                className="absolute -inset-4 bg-gradient-to-r from-accent-primary/20 to-accent-violet/20 blur-2xl -z-10 pointer-events-none"
                 animate={{
                   opacity: [0.5, 0.8, 0.5],
                 }}
@@ -126,12 +127,18 @@ export default function Home() {
             transition={{ delay: 0.5, duration: 0.8 }}
             className="mt-8 flex gap-4 justify-center"
           >
-            <button className="px-8 py-4 bg-gradient-to-r from-accent-primary to-accent-violet rounded-xl font-semibold text-lg hover:scale-105 transition-transform shadow-lg shadow-accent-primary/50">
+            <Link 
+              href="/search"
+              className="px-8 py-4 bg-gradient-to-r from-accent-primary to-accent-violet rounded-xl font-semibold text-lg hover:scale-105 transition-transform shadow-lg shadow-accent-primary/50 cursor-pointer z-50 relative block"
+            >
               Explore Movies
-            </button>
-            <button className="px-8 py-4 glass rounded-xl font-semibold text-lg hover:scale-105 transition-transform">
+            </Link>
+            <Link 
+              href="/watch/global"
+              className="px-8 py-4 glass rounded-xl font-semibold text-lg hover:scale-105 transition-transform cursor-pointer z-50 relative block"
+            >
               Watch Together
-            </button>
+            </Link>
           </motion.div>
         </motion.div>
 

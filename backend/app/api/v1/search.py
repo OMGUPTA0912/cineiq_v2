@@ -4,6 +4,9 @@ from typing import List, Optional
 from ...core.security import get_current_user
 from ...services.embedding import EmbeddingService
 from qdrant_client.models import Filter, FieldCondition, MatchValue
+import httpx
+import asyncio
+from ...core.config import settings
 
 router = APIRouter()
 
@@ -16,8 +19,7 @@ class SemanticSearchRequest(BaseModel):
 
 @router.post("/search/semantic")
 async def semantic_search(
-    request: SemanticSearchRequest,
-    user_id: str = Depends(get_current_user)
+    request: SemanticSearchRequest
 ):
     """
     Semantic search using natural language queries
@@ -69,9 +71,33 @@ async def semantic_search(
                 "year": hit.payload.get("year"),
                 "rating": hit.payload.get("rating"),
                 "similarity_score": hit.score,
+                "poster_url": f"https://image.tmdb.org/t/p/w500{hit.payload.get('poster_path')}" if hit.payload.get("poster_path") else None,
                 "match_reason": f"Semantic similarity: {hit.score:.2%}"
             })
         
+        # Fetch missing posters from TMDB on the fly
+        async def fetch_poster(idx, tmdb_id):
+            if not tmdb_id: return
+            try:
+                async with httpx.AsyncClient() as client:
+                    resp = await client.get(
+                        f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={settings.TMDB_API_KEY}"
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        if data.get("poster_path"):
+                            results[idx]["poster_url"] = f"https://image.tmdb.org/t/p/w500{data['poster_path']}"
+            except Exception:
+                pass
+
+        tasks = []
+        for i, res in enumerate(results):
+            if not res.get("poster_url") and res.get("tmdb_id"):
+                tasks.append(fetch_poster(i, res.get("tmdb_id")))
+        
+        if tasks:
+            await asyncio.gather(*tasks)
+            
         return {
             "query": request.query,
             "results": results,
@@ -84,8 +110,7 @@ async def semantic_search(
 @router.get("/search/vibe")
 async def vibe_search(
     vibe: str,
-    limit: int = 20,
-    user_id: str = Depends(get_current_user)
+    limit: int = 20
 ):
     """
     Quick vibe-based search
@@ -108,4 +133,4 @@ async def vibe_search(
     
     # Use semantic search
     request = SemanticSearchRequest(query=query, limit=limit)
-    return await semantic_search(request, user_id)
+    return await semantic_search(request)

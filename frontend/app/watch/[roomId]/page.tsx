@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, Users, MessageCircle, Heart, Laugh, ThumbsUp, Fire } from 'lucide-react'
+import { Play, Pause, Users, MessageCircle, Heart, Laugh, ThumbsUp, Flame } from 'lucide-react'
 
 interface Participant {
   user_id: string
@@ -245,7 +245,7 @@ export default function WatchTogetherPage() {
                 { emoji: '❤️', icon: Heart },
                 { emoji: '😂', icon: Laugh },
                 { emoji: '👍', icon: ThumbsUp },
-                { emoji: '🔥', icon: Fire }
+                { emoji: '🔥', icon: Flame }
               ].map(({ emoji, icon: Icon }) => (
                 <button
                   key={emoji}

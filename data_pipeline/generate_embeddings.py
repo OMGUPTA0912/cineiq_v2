@@ -36,12 +36,14 @@ def create_qdrant_collections(client: QdrantClient):
         ("movie_poster_clip", 512)        # CLIP dimension (placeholder)
     ]
     
+    response = client.get_collections()
+    existing_collections = [c.name for c in response.collections]
+    
     for collection_name, dimension in collections:
         # Check if exists
-        try:
-            client.get_collection(collection_name)
+        if collection_name in existing_collections:
             print(f"   ✓ Collection '{collection_name}' already exists")
-        except:
+        else:
             # Create collection
             client.create_collection(
                 collection_name=collection_name,

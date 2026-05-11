@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Mic, Filter, Star } from 'lucide-react'
 import Link from 'next/link'
+import { useAuth } from '@clerk/nextjs'
 
 interface SearchResult {
   tmdb_id: number
@@ -32,17 +33,19 @@ export default function SearchPage() {
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
   const [searchType, setSearchType] = useState<'semantic' | 'vibe'>('semantic')
+  const { getToken } = useAuth()
 
   const handleSearch = async (searchQuery: string = query) => {
     if (!searchQuery.trim()) return
 
     setLoading(true)
     try {
+      const token = await getToken()
       const response = await fetch('http://localhost:8000/api/v1/search/semantic', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_TOKEN'
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           query: searchQuery,
@@ -61,9 +64,10 @@ export default function SearchPage() {
   const handleVibeSearch = async (vibe: string) => {
     setLoading(true)
     try {
+      const token = await getToken()
       const response = await fetch(`http://localhost:8000/api/v1/search/vibe?vibe=${vibe}&limit=20`, {
         headers: {
-          'Authorization': 'Bearer YOUR_TOKEN'
+          'Authorization': `Bearer ${token}`
         }
       })
       const data = await response.json()
