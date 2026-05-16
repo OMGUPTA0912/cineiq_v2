@@ -18,21 +18,30 @@ async def lifespan(app: FastAPI):
     print("🚀 Starting CINEIQ backend...")
     
     # Initialize database
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    print("✅ Database initialized")
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("✅ Database initialized")
+    except Exception as e:
+        print(f"⚠️  Database connection failed (might still be booting): {e}")
     
     # Initialize Redis
-    app_state["redis"] = redis.from_url(settings.REDIS_URL, decode_responses=True)
-    await app_state["redis"].ping()
-    print("✅ Redis connected")
+    try:
+        app_state["redis"] = redis.from_url(settings.REDIS_URL, decode_responses=True)
+        await app_state["redis"].ping()
+        print("✅ Redis connected")
+    except Exception as e:
+        print(f"⚠️  Redis connection failed (might still be booting): {e}")
     
     # Initialize Qdrant
-    if settings.QDRANT_HOST.startswith("http"):
-        app_state["qdrant"] = QdrantClient(url=settings.QDRANT_HOST, api_key=settings.QDRANT_API_KEY)
-    else:
-        app_state["qdrant"] = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
-    print("✅ Qdrant connected")
+    try:
+        if settings.QDRANT_HOST.startswith("http"):
+            app_state["qdrant"] = QdrantClient(url=settings.QDRANT_HOST, api_key=settings.QDRANT_API_KEY)
+        else:
+            app_state["qdrant"] = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
+        print("✅ Qdrant connected")
+    except Exception as e:
+        print(f"⚠️  Qdrant connection failed: {e}")
     
     # Load embedding service
     try:
