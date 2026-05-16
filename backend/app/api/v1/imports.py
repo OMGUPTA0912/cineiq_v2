@@ -11,6 +11,25 @@ from ...core.security import get_current_user
 
 router = APIRouter()
 
+@router.get("/trigger-ingest")
+async def trigger_ingest():
+    import subprocess
+    import os
+    import threading
+    
+    def run_scripts():
+        print("Starting ingestion...")
+        subprocess.run(["python", "data_pipeline/ingest_tmdb.py"], cwd=os.getcwd())
+        print("Starting embedding generation...")
+        subprocess.run(["python", "data_pipeline/generate_embeddings.py"], cwd=os.getcwd())
+        print("Pipeline complete!")
+        
+    try:
+        threading.Thread(target=run_scripts, daemon=True).start()
+        return {"message": "Data pipeline triggered sequentially in the background on Railway server!"}
+    except Exception as e:
+        return {"error": str(e)}
+
 @router.post("/import/letterboxd")
 async def import_letterboxd(
     file: UploadFile = File(...),
