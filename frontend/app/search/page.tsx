@@ -41,7 +41,8 @@ export default function SearchPage() {
     setLoading(true)
     try {
       const token = await getToken()
-      const response = await fetch('http://localhost:8000/api/v1/search/semantic', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cineiqv2-production.up.railway.app'
+      const response = await fetch(`${API_URL}/api/v1/search/semantic`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +66,8 @@ export default function SearchPage() {
     setLoading(true)
     try {
       const token = await getToken()
-      const response = await fetch(`http://localhost:8000/api/v1/search/vibe?vibe=${vibe}&limit=20`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cineiqv2-production.up.railway.app'
+      const response = await fetch(`${API_URL}/api/v1/search/vibe?vibe=${vibe}&limit=20`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
