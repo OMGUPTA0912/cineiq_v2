@@ -50,218 +50,153 @@ const features = [
 ]
 
 export default function Home() {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-bg-base via-purple-900/10 to-bg-base pointer-events-none" />
+    <div className="min-h-screen relative bg-bg-base text-text-primary selection:bg-accent-primary/30">
       
-      {/* Floating orbs */}
-      <motion.div
-        className="absolute top-20 left-20 w-72 h-72 bg-accent-primary/20 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-20 w-96 h-96 bg-accent-violet/20 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.5, 0.3, 0.5],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut"
+      {/* Background Noise/Grain Effect */}
+      <div 
+        className="fixed inset-0 opacity-[0.03] pointer-events-none z-0"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }}
       />
 
-      <main className="relative z-10 max-w-7xl mx-auto px-6 py-16">
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-block mb-6"
-          >
-            <div className="relative">
-              <h1 className="text-8xl font-bold bg-gradient-to-r from-accent-primary via-accent-violet to-accent-cyan bg-clip-text text-transparent">
-                CINEIQ
-              </h1>
-              <motion.div
-                className="absolute -inset-4 bg-gradient-to-r from-accent-primary/20 to-accent-violet/20 blur-2xl -z-10 pointer-events-none"
-                animate={{
-                  opacity: [0.5, 0.8, 0.5],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                }}
-              />
-            </div>
-          </motion.div>
+      <main className="relative z-10 flex flex-col md:flex-row min-h-screen">
+        
+        {/* Left Fixed Navigation Column */}
+        <div className="w-full md:w-1/3 md:fixed md:h-screen p-8 md:p-16 flex flex-col justify-between border-b md:border-b-0 md:border-r border-border/50 bg-bg-base/80 backdrop-blur-sm">
+          <div>
+            <h2 className="text-xl font-bold tracking-widest text-text-muted mb-12">CINEIQ</h2>
+            
+            <nav className="flex flex-col gap-6">
+              <button onClick={() => scrollToSection('about')} className="text-left group flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-text-muted group-hover:bg-accent-primary transition-colors duration-300" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-text-secondary group-hover:text-text-primary transition-colors duration-300">About</span>
+              </button>
+              <button onClick={() => scrollToSection('features')} className="text-left group flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-text-muted group-hover:bg-accent-primary transition-colors duration-300" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-text-secondary group-hover:text-text-primary transition-colors duration-300">Features</span>
+              </button>
+              <button onClick={() => scrollToSection('summary')} className="text-left group flex items-center gap-4">
+                <span className="w-8 h-[1px] bg-text-muted group-hover:bg-accent-primary transition-colors duration-300" />
+                <span className="text-sm font-semibold tracking-widest uppercase text-text-secondary group-hover:text-text-primary transition-colors duration-300">Summary</span>
+              </button>
+            </nav>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-2xl text-text-secondary max-w-3xl mx-auto leading-relaxed"
-          >
-            Next-Gen Explainable Movie Intelligence & Social Discovery Platform
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="mt-8 flex gap-4 justify-center"
-          >
+          <div className="mt-12 md:mt-0 flex gap-4">
             <Link 
               href="/search"
-              className="px-8 py-4 bg-gradient-to-r from-accent-primary to-accent-violet rounded-xl font-semibold text-lg hover:scale-105 transition-transform shadow-lg shadow-accent-primary/50 cursor-pointer z-50 relative block"
+              className="text-sm font-semibold tracking-widest uppercase text-accent-primary hover:text-accent-cyan transition-colors duration-300"
             >
-              Explore Movies
+              [ Explore ]
             </Link>
             <Link 
               href="/watch/global"
-              className="px-8 py-4 glass rounded-xl font-semibold text-lg hover:scale-105 transition-transform cursor-pointer z-50 relative block"
+              className="text-sm font-semibold tracking-widest uppercase text-text-secondary hover:text-text-primary transition-colors duration-300"
             >
-              Watch Together
+              [ Watch Party ]
             </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: feature.delay, duration: 0.5 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="glass p-6 group cursor-pointer relative overflow-hidden"
-            >
-              <motion.div
-                className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
-              />
-              
-              <div className="relative z-10">
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                
-                <h3 className="text-xl font-semibold mb-2 text-text-primary">
-                  {feature.title}
-                </h3>
-                
-                <p className="text-text-secondary text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-
-              {/* Animated border */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${feature.color}, transparent)`,
-                  opacity: 0,
-                }}
-                whileHover={{ opacity: 0.3 }}
-              />
-            </motion.div>
-          ))}
+          </div>
         </div>
 
-        {/* Tech Stack Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="glass p-8 relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-accent-cyan/10 rounded-full blur-3xl" />
+        {/* Right Scrolling Content Column */}
+        <div className="w-full md:w-2/3 md:ml-[33.333333%] p-8 md:p-16 lg:p-32 flex flex-col gap-32">
           
-          <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-accent-cyan to-accent-primary bg-clip-text text-transparent">
-              Production-Ready Architecture
-            </h2>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { label: 'Backend', value: 'FastAPI', status: 'operational' },
-                { label: 'Database', value: 'PostgreSQL 16', status: 'operational' },
-                { label: 'Cache', value: 'Redis 7', status: 'operational' },
-                { label: 'Vector DB', value: 'Qdrant', status: 'operational' },
-                { label: 'ML - CF', value: 'SVD + NCF', status: 'training' },
-                { label: 'ML - NLP', value: 'DistilBERT', status: 'training' },
-                { label: 'Embeddings', value: 'Sentence-T', status: 'training' },
-                { label: 'LLM', value: 'Groq Llama', status: 'ready' },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.9 + i * 0.05 }}
-                  className="bg-bg-elevated/50 p-4 rounded-lg border border-border hover:border-accent-primary/50 transition-colors"
-                >
-                  <div className="text-xs text-text-muted mb-1 uppercase tracking-wider">
-                    {item.label}
-                  </div>
-                  <div className="font-mono text-sm font-semibold text-text-primary mb-2">
-                    {item.value}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${
-                      item.status === 'operational' ? 'bg-accent-green' :
-                      item.status === 'training' ? 'bg-accent-amber animate-pulse' :
-                      'bg-accent-cyan'
-                    }`} />
-                    <span className="text-xs text-text-muted capitalize">
-                      {item.status}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div
+          {/* Hero Headline */}
+          <section className="min-h-[70vh] flex flex-col justify-center">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="font-oswald text-6xl md:text-8xl lg:text-[10rem] leading-[0.85] uppercase tracking-tighter text-text-primary mb-8"
+            >
+              Find Films<br/>
+              <span className="text-text-muted">That Wreck</span><br/>
+              You.
+            </motion.h1>
+            <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="mt-8 p-4 bg-accent-amber/10 border border-accent-amber/30 rounded-lg"
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-xl md:text-2xl text-text-secondary max-w-xl font-light leading-relaxed"
             >
-              <p className="text-sm text-text-secondary">
-                <span className="font-semibold text-accent-amber">⚡ Quick Start:</span> Run{' '}
-                <code className="font-mono bg-bg-base px-2 py-1 rounded text-accent-cyan">
-                  make setup
-                </code>{' '}
-                to download MovieLens 25M, train models, and generate embeddings
-              </p>
-            </motion.div>
-          </div>
-        </motion.div>
+              Next-gen movie discovery powered by semantic AI, collaborative filtering, and explainable insights.
+            </motion.p>
+          </section>
 
-        {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-          className="mt-16 text-center text-text-muted text-sm"
-        >
-          <p>IIT Guwahati Coding Club • Even Semester 2026 • Production-Ready ML Platform</p>
-        </motion.div>
+          {/* About Section */}
+          <section id="about" className="scroll-mt-24">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+            >
+              <h3 className="text-sm font-semibold tracking-widest uppercase text-text-muted mb-8 border-b border-border/50 pb-4">01 / About</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <p className="text-lg text-text-secondary leading-relaxed">
+                  CINEIQ is not just another movie database. It is a highly advanced recommendation engine that understands the nuanced <span className="text-text-primary font-medium">"vibe"</span> of what you want to watch. 
+                </p>
+                <p className="text-lg text-text-secondary leading-relaxed">
+                  By leveraging state-of-the-art Natural Language Processing (NLP) and Vector Databases, we map the cinematic universe into mathematical space to find exact emotional matches for your mood.
+                </p>
+              </div>
+            </motion.div>
+          </section>
+
+          {/* Features Section */}
+          <section id="features" className="scroll-mt-24">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+            >
+              <h3 className="text-sm font-semibold tracking-widest uppercase text-text-muted mb-8 border-b border-border/50 pb-4">02 / Features</h3>
+              <div className="flex flex-col gap-12">
+                {features.map((feature, idx) => (
+                  <div key={idx} className="group border-l-2 border-border hover:border-accent-primary pl-8 transition-colors duration-300">
+                    <h4 className="text-2xl font-oswald uppercase tracking-tight text-text-primary mb-2 group-hover:text-accent-primary transition-colors">{feature.title}</h4>
+                    <p className="text-text-secondary text-lg leading-relaxed">{feature.description}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </section>
+
+          {/* Summary Section */}
+          <section id="summary" className="scroll-mt-24 pb-32">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+            >
+              <h3 className="text-sm font-semibold tracking-widest uppercase text-text-muted mb-8 border-b border-border/50 pb-4">03 / Summary</h3>
+              <div className="bg-bg-elevated/30 border border-border/50 p-8 md:p-12 rounded-2xl backdrop-blur-md">
+                <h2 className="font-oswald text-4xl md:text-5xl uppercase tracking-tight mb-6">Ready to find your film?</h2>
+                <p className="text-lg text-text-secondary mb-10 max-w-2xl leading-relaxed">
+                  Stop scrolling endlessly through generic categories. Tell us exactly what you want to feel, and let our AI engine do the rest.
+                </p>
+                <Link 
+                  href="/search"
+                  className="inline-block px-10 py-5 bg-text-primary text-bg-base font-bold tracking-widest uppercase hover:bg-accent-primary hover:text-white transition-all duration-300"
+                >
+                  Start Exploring
+                </Link>
+              </div>
+            </motion.div>
+          </section>
+
+        </div>
       </main>
     </div>
   )

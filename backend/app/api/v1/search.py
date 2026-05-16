@@ -75,28 +75,32 @@ async def semantic_search(
                 "match_reason": f"Semantic similarity: {hit.score:.2%}"
             })
         
-        # Fetch missing posters from TMDB on the fly
-        async def fetch_poster(idx, tmdb_id):
+        # Fetch missing posters from TMDB on the fly with a rate limit
+        semaphore = asyncio.Semaphore(5)
+        
+        async def fetch_poster(client, idx, tmdb_id):
             if not tmdb_id: return
-            try:
-                async with httpx.AsyncClient() as client:
+            async with semaphore:
+                try:
                     resp = await client.get(
-                        f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={settings.TMDB_API_KEY}"
+                        f"https://api.themoviedb.org/3/movie/{tmdb_id}?api_key={settings.TMDB_API_KEY}",
+                        timeout=5.0
                     )
                     if resp.status_code == 200:
                         data = resp.json()
                         if data.get("poster_path"):
                             results[idx]["poster_url"] = f"https://image.tmdb.org/t/p/w500{data['poster_path']}"
-            except Exception:
-                pass
+                except Exception as e:
+                    print(f"TMDB Fetch Error: {type(e).__name__}")
 
         tasks = []
-        for i, res in enumerate(results):
-            if not res.get("poster_url") and res.get("tmdb_id"):
-                tasks.append(fetch_poster(i, res.get("tmdb_id")))
-        
-        if tasks:
-            await asyncio.gather(*tasks)
+        async with httpx.AsyncClient() as client:
+            for i, res in enumerate(results):
+                if not res.get("poster_url") and res.get("tmdb_id"):
+                    tasks.append(fetch_poster(client, i, res.get("tmdb_id")))
+            
+            if tasks:
+                await asyncio.gather(*tasks)
             
         return {
             "query": request.query,

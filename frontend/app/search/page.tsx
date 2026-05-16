@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Mic, Filter, Star } from 'lucide-react'
+import { Search, Mic, Filter, Star, Film } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@clerk/nextjs'
 
@@ -17,15 +17,15 @@ interface SearchResult {
   poster_url?: string
 }
 
-const vibePresets = [
-  { label: 'Mind-Bending', emoji: '🧠', query: 'mind-bending' },
-  { label: 'Feel-Good', emoji: '😊', query: 'feel-good' },
-  { label: 'Dark & Atmospheric', emoji: '🌑', query: 'dark-atmospheric' },
-  { label: 'Action-Packed', emoji: '💥', query: 'action-packed' },
-  { label: 'Romantic', emoji: '❤️', query: 'romantic' },
-  { label: 'Scary', emoji: '😱', query: 'scary' },
-  { label: 'Epic Adventure', emoji: '⚔️', query: 'epic' },
-  { label: 'Funny', emoji: '😂', query: 'funny' }
+const PRESETS = [
+  { label: 'Mind-Bending', query: 'mind-bending psychological thriller that makes you question reality' },
+  { label: 'Feel-Good', query: 'uplifting feel-good movie that makes you happy' },
+  { label: 'Dark & Atmospheric', query: 'dark moody atmospheric film with beautiful cinematography' },
+  { label: 'Action-Packed', query: 'high octane action movie with incredible stunts' },
+  { label: 'Romantic', query: 'touching emotional romance movie' },
+  { label: 'Scary', query: 'terrifying horror movie that keeps you awake' },
+  { label: 'Epic Adventure', query: 'grand epic adventure in a massive world' },
+  { label: 'Funny', query: 'hilarious comedy with great jokes' },
 ]
 
 export default function SearchPage() {
@@ -88,7 +88,7 @@ export default function SearchPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-accent-cyan to-accent-primary bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 text-accent-red">
             Discover Movies
           </h1>
           <p className="text-xl text-text-secondary">
@@ -112,13 +112,13 @@ export default function SearchPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Try: 'dark psychological thriller with twist ending'"
-                className="w-full pl-12 pr-4 py-4 bg-bg-elevated rounded-xl border border-border focus:border-accent-primary outline-none text-lg"
+                className="w-full pl-12 pr-4 py-4 bg-bg-elevated rounded-xl border border-border focus:border-accent-red outline-none text-lg focus:ring-1 focus:ring-accent-red transition-all"
               />
             </div>
             <button
               onClick={() => handleSearch()}
               disabled={loading}
-              className="px-8 py-4 bg-gradient-to-r from-accent-primary to-accent-violet rounded-xl font-semibold hover:scale-105 transition-transform disabled:opacity-50"
+              className="px-8 py-4 bg-accent-red hover:bg-accent-secondary text-white rounded-xl font-bold hover:scale-105 transition-all disabled:opacity-50"
             >
               {loading ? 'Searching...' : 'Search'}
             </button>
@@ -129,14 +129,13 @@ export default function SearchPage() {
 
           {/* Vibe Presets */}
           <div className="flex flex-wrap gap-3">
-            {vibePresets.map((preset) => (
+            {PRESETS.map((preset) => (
               <button
                 key={preset.query}
                 onClick={() => handleVibeSearch(preset.query)}
-                className="px-4 py-2 bg-bg-elevated rounded-lg border border-border hover:border-accent-primary transition-colors text-sm"
+                className="px-4 py-2 bg-bg-surface hover:bg-bg-elevated border border-border rounded-xl text-sm transition-colors flex items-center gap-2"
               >
-                <span className="mr-2">{preset.emoji}</span>
-                {preset.label}
+                <span>{preset.label}</span>
               </button>
             ))}
           </div>
@@ -182,7 +181,7 @@ export default function SearchPage() {
                         />
                       ) : (
                         <div className="w-full aspect-[2/3] bg-bg-elevated flex items-center justify-center">
-                          <span className="text-4xl">🎬</span>
+                          <Film className="w-12 h-12 text-text-muted" />
                         </div>
                       )}
                       
@@ -229,7 +228,7 @@ export default function SearchPage() {
               exit={{ opacity: 0 }}
               className="text-center py-20"
             >
-              <div className="text-6xl mb-4">🔍</div>
+              <Search className="w-16 h-16 mx-auto mb-4 text-text-muted" />
               <p className="text-xl text-text-secondary">
                 Start searching to discover amazing movies
               </p>

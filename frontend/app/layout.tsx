@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Oswald } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
+const oswald = Oswald({ subsets: ['latin'], variable: '--font-oswald' })
 
 export const metadata: Metadata = {
   title: 'CINEIQ - Explainable Movie Recommendations',
@@ -20,7 +21,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-bg-base text-text-primary`} suppressHydrationWarning>
+        <body className={`${inter.variable} ${jetbrainsMono.variable} ${oswald.variable} font-sans bg-bg-base text-text-primary`} suppressHydrationWarning>
           {children}
         </body>
       </html>
