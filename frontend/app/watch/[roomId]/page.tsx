@@ -37,9 +37,9 @@ export default function WatchTogetherPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Connect to WebSocket
+    const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'wss://cineiqv2-production.up.railway.app'
     const websocket = new WebSocket(
-      `ws://localhost:8000/api/v1/ws/room/${params.roomId}?user_id=user123&display_name=Guest`
+      `${WS_URL}/api/v1/ws/room/${params.roomId}?user_id=user123&display_name=Guest`
     )
 
     websocket.onopen = () => {

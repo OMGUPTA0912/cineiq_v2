@@ -32,10 +32,11 @@ export default function MovieDetailPage() {
 
   const fetchMovie = async () => {
     try {
-      // In production, use real API with auth
-      const response = await fetch(`http://localhost:8000/api/v1/movies/${params.id}`, {
+      const token = await getToken()
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cineiqv2-production.up.railway.app'
+      const response = await fetch(`${API_URL}/api/v1/movies/${params.id}`, {
         headers: {
-          'Authorization': 'Bearer YOUR_TOKEN'
+          'Authorization': `Bearer ${token}`
         }
       })
       const data = await response.json()
@@ -47,18 +48,20 @@ export default function MovieDetailPage() {
     }
   }
 
-  const submitRating = async (rating: number) => {
+  const handleRate = async (rating: number) => {
+    if (!isSignedIn) return
     setUserRating(rating)
-    // Submit to API
     try {
-      await fetch('http://localhost:8000/api/v1/users/ratings', {
+      const token = await getToken()
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cineiqv2-production.up.railway.app'
+      await fetch(`${API_URL}/api/v1/users/ratings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_TOKEN'
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          tmdb_id: params.id,
+          movie_id: params.id,
           rating: rating
         })
       })

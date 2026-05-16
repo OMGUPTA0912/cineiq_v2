@@ -29,9 +29,11 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/users/profile', {
+      const token = await getToken()
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cineiqv2-production.up.railway.app'
+      const response = await fetch(`${API_URL}/api/v1/users/profile`, {
         headers: {
-          'Authorization': 'Bearer YOUR_TOKEN'
+          'Authorization': `Bearer ${token}`
         }
       })
       const data = await response.json()
@@ -47,14 +49,17 @@ export default function ProfilePage() {
     const file = event.target.files?.[0]
     if (!file) return
 
+    setUploading(true)
     const formData = new FormData()
     formData.append('file', file)
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/import/letterboxd', {
+      const token = await getToken()
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cineiqv2-production.up.railway.app'
+      const response = await fetch(`${API_URL}/api/v1/import/letterboxd`, {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer YOUR_TOKEN'
+          'Authorization': `Bearer ${token}`
         },
         body: formData
       })
