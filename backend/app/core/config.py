@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     # Qdrant
     QDRANT_HOST: str = "localhost"
     QDRANT_PORT: int = 6333
+    QDRANT_API_KEY: Optional[str] = None
     
     # Clerk Authentication
     CLERK_SECRET_KEY: str

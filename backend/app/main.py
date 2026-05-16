@@ -28,7 +28,10 @@ async def lifespan(app: FastAPI):
     print("✅ Redis connected")
     
     # Initialize Qdrant
-    app_state["qdrant"] = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
+    if settings.QDRANT_HOST.startswith("http"):
+        app_state["qdrant"] = QdrantClient(url=settings.QDRANT_HOST, api_key=settings.QDRANT_API_KEY)
+    else:
+        app_state["qdrant"] = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
     print("✅ Qdrant connected")
     
     # Load embedding service
