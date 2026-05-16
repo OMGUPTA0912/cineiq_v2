@@ -6,6 +6,14 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://cineiq:cineiq_password@localhost:5432/cineiq"
     
+    @property
+    def async_database_url(self) -> str:
+        if self.DATABASE_URL.startswith("postgres://"):
+            return self.DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif self.DATABASE_URL.startswith("postgresql://"):
+            return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return self.DATABASE_URL
+
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
     
@@ -15,7 +23,7 @@ class Settings(BaseSettings):
     
     # Clerk Authentication
     CLERK_SECRET_KEY: str
-    CLERK_PUBLISHABLE_KEY: str
+    CLERK_PUBLISHABLE_KEY: Optional[str] = None
     
     # TMDB API
     TMDB_API_KEY: str
