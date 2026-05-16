@@ -116,7 +116,10 @@ async def main():
     
     # Initialize Qdrant client
     print(f"\n🔌 Connecting to Qdrant at {settings.QDRANT_HOST}:{settings.QDRANT_PORT}...")
-    client = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
+    if settings.QDRANT_HOST.startswith("http"):
+        client = QdrantClient(url=settings.QDRANT_HOST, api_key=settings.QDRANT_API_KEY)
+    else:
+        client = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
     
     # Create collections
     print("\n📦 Creating Qdrant collections...")
