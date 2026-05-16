@@ -12,7 +12,9 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install "numpy<2" "Cython" && pip install -r requirements.txt
+RUN pip install "numpy<2" "Cython" && \
+    pip install torch==2.1.2 --extra-index-url https://download.pytorch.org/whl/cpu && \
+    pip install -r requirements.txt
 
 # Copy application code
 COPY . .
